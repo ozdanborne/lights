@@ -1,0 +1,7 @@
+*.pyc
+lights.json
+bin
+lib
+share
+local
+pip-selfcheck.json

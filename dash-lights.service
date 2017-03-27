@@ -1,0 +1,10 @@
+[Unit]
+Description=Dans Room Lights
+
+[Service]
+Type=simple
+ExecStart=/opt/dash-lights/bin/python dash-lights.py daemon
+WorkingDirectory=/opt/dash-lights
+
+[Install]
+WantedBy=multi-user.target
