@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""lights_witch
+"""lights
 
 Usage:
-  lights_witch.py daemon
-  lights_witch.py sniff
-  lights_witch.py terminal
-  lights_witch.py rainbow
+  lights daemon
+  lights sniff
+  lights terminal
+  lights rainbow
 
 Description:
   daemon:   Run the light daemon.
