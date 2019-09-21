@@ -5,6 +5,7 @@ Usage:
   lights_witch.py daemon
   lights_witch.py sniff
   lights_witch.py terminal
+  lights_witch.py rainbow
 
 Description:
   daemon:   Run the light daemon.
@@ -29,7 +30,7 @@ GROUP_ID = 1
 BRIGHT_SCENE_ID = 'qgqUDIXZ56KFs5L'
 
 try:
-    bridge = Bridge('10.0.0.10')
+    bridge = Bridge('philips-hue')
 except socket.error:
     print "Error: Couldn't connect to bridge. Do you have the right IP?"
     sys.exit(1)
@@ -47,13 +48,11 @@ def get_known_macs(filename):
     return json.loads(data)
 
 
-known_macs = get_known_macs(KNOWN_MAC_FILE)
-
-
 def get_light_ids():
     return [light_id for light_id in bridge.get_light()]
 
 def mysniff(toggle_lights):
+    known_macs = get_known_macs(KNOWN_MAC_FILE)
     def arp_display(pkt):
         try:
             if pkt[ARP].op == 1:  # who-has (request)
@@ -106,5 +105,7 @@ if __name__ == '__main__':
         print sniff(prn=mysniff(toggle_lights=True), filter="arp", store=0, count=0)
     if args['terminal']:
         import pdb; pdb.set_trace()
+    if args['rainbow']:
+        set_lights_rainbow(get_light_ids())
     else:
         print 'done'
