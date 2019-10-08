@@ -32,13 +32,13 @@ BRIGHT_SCENE_ID = 'qgqUDIXZ56KFs5L'
 try:
     bridge = Bridge('philips-hue')
 except socket.error:
-    print "Error: Couldn't connect to bridge. Do you have the right IP?"
+    print ("Error: Couldn't connect to bridge. Do you have the right IP?")
     sys.exit(1)
 except PhueRegistrationException:
-    print "Error: Not registered withe bridge. Hit the button!"
+    print ("Error: Not registered withe bridge. Hit the button!")
     sys.exit(1)
 except Exception as e:
-    print "Error connecting to bridge: %s" % e
+    print ("Error connecting to bridge: %s" % e)
     sys.exit(1)
 
 
@@ -61,9 +61,9 @@ def mysniff(toggle_lights):
                     room = known_macs[mac]
                 except KeyError:
                     if not toggle_lights:
-                        print "Unknown Arp: " + mac
+                        print ("Unknown Arp: " + mac)
                 else:
-                    print "toggling room: %s" % room
+                    print ("toggling room: %s" % room)
                     if room == 'color-loop':
                         set_lights_rainbow(get_light_ids())
                     elif room == 'on-off':
@@ -73,9 +73,9 @@ def mysniff(toggle_lights):
                         else:
                             bridge.set_group(GROUP_ID, 'on', value=True)
                     else:
-                        print "unknown room: %s" % room
+                        print ("unknown room: %s" % room)
         except IndexError as e:
-            print e
+            print (e)
     return arp_display
 
 
@@ -98,14 +98,14 @@ def set_lights_off(ids):
 if __name__ == '__main__':
     args = docopt(__doc__)
     if args['sniff']:
-        print "running sniffer"
-        print sniff(prn=mysniff(toggle_lights=False), filter="arp", store=0, count=0)
+        print ("running sniffer")
+        print (sniff(prn=mysniff(toggle_lights=False), filter="arp", store=0, count=0))
     if args['daemon']:
-        print ("running daemon mode")
-        print sniff(prn=mysniff(toggle_lights=True), filter="arp", store=0, count=0)
+        print (("running daemon mode"))
+        print (sniff(prn=mysniff(toggle_lights=True), filter="arp", store=0, count=0))
     if args['terminal']:
         import pdb; pdb.set_trace()
     if args['rainbow']:
         set_lights_rainbow(get_light_ids())
     else:
-        print 'done'
+        print ('done')
