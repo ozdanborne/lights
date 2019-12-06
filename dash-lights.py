@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """lights
 
 Usage:
@@ -6,6 +6,7 @@ Usage:
   lights sniff
   lights terminal
   lights rainbow
+  lights off
 
 Description:
   daemon:   Run the light daemon.
@@ -87,6 +88,10 @@ def set_lights_rainbow(ids):
                                    'hue': random.randint(0, 65535),
                                    'sat': random.randint(128, 254)})
 
+def turn_lights_off(ids):
+    for id in ids:
+        bridge.set_light(int(id), {'on': False})
+
 def set_lights_on(ids):
     for id in ids:
         bridge.set_light(int(id), {'on': True, 'bri': 254})
@@ -107,5 +112,7 @@ if __name__ == '__main__':
         import pdb; pdb.set_trace()
     if args['rainbow']:
         set_lights_rainbow(get_light_ids())
+    if args['off']:
+        turn_lights_off(get_light_ids())
     else:
         print ('done')
