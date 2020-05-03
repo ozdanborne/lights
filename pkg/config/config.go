@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -13,12 +14,26 @@ type config struct {
 }
 
 func (c *config) Save() error {
-	return ioutil.WriteFile(configPath, []byte(c.User), 0644)
+	bits, err := json.Marshal(c)
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(configPath, bits, 0644)
 }
 
-func Load() config {
+func Load() (config, error) {
 	c := config{}
-	bits, _ := ioutil.ReadFile(configPath)
-	c.User = string(bits)
-	return c
+
+	bits, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return c, nil
+		}
+		return c, err
+	}
+	if err := json.Unmarshal(bits, &c); err != nil {
+		return c, err
+	}
+
+	return c, nil
 }

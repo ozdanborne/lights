@@ -30,21 +30,26 @@ commands:
 }
 
 func run(command string) error {
-	config := config.Load()
+	config, err := config.Load()
+	if err != nil {
+		return err
+	}
 
 	bridge, err := huego.Discover()
 	if err != nil {
 		return fmt.Errorf("bridge discovery failed: %v", err)
 	}
 
-	// bridge.DeleteUser("lightci")
 	if config.User == "" {
 		config.User, err = bridge.CreateUser("lightcli")
 		if err != nil {
-			return fmt.Errorf("failed to create user: %v", err)
+			if hueErr, ok := err.(*huego.APIError); ok && hueErr.Type == 101 {
+				return fmt.Errorf("not authenticated! press the hue link button then rerun")
+			}
+			return fmt.Errorf("failed to create user: %s", err.Error())
 		}
 		if err := config.Save(); err != nil {
-			return fmt.Errorf("failed to persist user: %v", err)
+			return fmt.Errorf("failed to save auth to disk: %s", err.Error())
 		}
 	}
 
