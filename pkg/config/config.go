@@ -10,7 +10,8 @@ import (
 var configPath = filepath.Join(os.Getenv("HOME"), ".lights")
 
 type config struct {
-	User string
+	User  string
+	Group int
 }
 
 func (c *config) Save() error {
