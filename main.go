@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 
 	"github.com/ozdanborne/lights/pkg/config"
@@ -78,11 +79,27 @@ func run(command string) error {
 		b.SetGroupState(config.Group, huego.State{
 			On: false,
 		})
+	case "bright":
+		b.SetGroupState(config.Group, huego.State{
+			On:  true,
+			Bri: 128,
+		})
 	case "dim":
 		b.SetGroupState(config.Group, huego.State{
 			On:  true,
 			Bri: 12,
 		})
+	case "random":
+		lights, err := b.GetLights()
+		if err != nil {
+			return err
+		}
+		for _, light := range lights {
+			b.SetLightState(light.ID, huego.State{
+				On:  true,
+				Hue: uint16(rand.Uint32()),
+			})
+		}
 	case "rainbow":
 		b.SetGroupState(config.Group, huego.State{
 			On:     true,
